@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Real-Time System Metrics</title>
+  <style>
+    #metrics-container {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="metrics-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:3000'); // Replace with your server URL
+
+    // When system metrics are received
+    socket.on('metrics', function(data) {
+      // displayMetrics(metrics);
+      console.log("🚀 ~ file: liveMetrics.html:23 ~ socket.on ~ data:", data);
+      const container = document.getElementById('metrics-container');
+      var html = '';
+      for (var layer of Object.values(data)) {
+        for (var metric of Object.values(layer.metrics)) {
+            const { label, unit, current } = metric;
+            html += `<p key=${metric.label}>${metric.label}: ${metric.current} ${unit}</p>`;
+          }
+        }
+        container.innerHTML = html;
+    });
+
+    // Display the system metrics
+    /* function displayMetrics(metrics) {
+      console.log("🚀 ~ file: liveMetrics.html:26 ~ displayMetrics ~ metrics:", metrics)
+      const container = document.getElementById('metrics-container');
+      container.innerHTML = `
+        Object.keys(metrics).forEach(key => {
+          <p>key: ${metrics[key]}</p>
+        });
+      `;
+    } */
+  </script>
+</body>
+</html>
